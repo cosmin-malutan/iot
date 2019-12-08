@@ -13,7 +13,13 @@
 * Navigate to page ```http://localhost:8080/```
 
 ### Schematics
-![](https://github.com/cosmin-malutan/iot/raw/master/IO_bb.png)
+![schematics](https://github.com/cosmin-malutan/iot/raw/master/IO_bb.png)
+
+![App screenshot](https://github.com/cosmin-malutan/iot/raw/master/screenshot3.png)
+
+![Device screenshot 1](https://github.com/cosmin-malutan/iot/raw/master/screenshot1.jpg)
+
+![Device screenshot 2](https://github.com/cosmin-malutan/iot/raw/master/screenshot2.jpg)
 
 #### MQTT subscribe from OSX
 mosquitto_sub -d -t "SENSOR" -L mqtts://username:pi@192.168.100.31:1883/SENSOR 
