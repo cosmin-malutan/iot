@@ -1,0 +1,12 @@
+{
+  "mqtt" : {
+    "port": 1883,
+    "protocol": "mqtt",
+    "host": "192.168.100.31",
+    "username": "pi",
+    "password": "pi",
+    "sensorTopic": "SENSOR",
+    "messageTopic": "DEVICE_MESSAGE",
+    "lightToggleTopic": "LIGHT_TOGGLE"
+  }
+}

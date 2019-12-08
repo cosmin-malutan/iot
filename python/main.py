@@ -13,6 +13,8 @@ from config import DEVICE_MESSAGE_TOPIC, LIGHT_TOGGLE_TOPIC
 global led
 led = True
 
+print("Starting up device program")
+
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -33,9 +35,13 @@ def on_message(client, userdata, msg):
 
 
 def main():
+    print("Getting IP address")
     ip_address = get_ip_address('wlan0')
+    print("IP address " + ip_address)
     ser = serial.Serial('/dev/ttyUSB0', 9600)
+    print("Serial connected ")
     renderer_client = RendererClient(ip_address)
+    print("Connecting MQTT client")
     mqtt_client = MqttClient(on_connect, on_message, (renderer_client, ser))
 
 

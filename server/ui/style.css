@@ -1,0 +1,11 @@
+#led_div {
+  background-color: grey;
+  width: 100px;
+  height: 100px;
+}
+#led_div.on {
+  background-color: yellow;
+}
+#led_button {
+  width: 100px;
+}

@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="/style.css">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    var ws = new WebSocket('ws://localhost:8090');    // event emmited when connected
+    ws.onopen = function () {
+      console.log('websocket is connected ...')        // sending a send event to websocket server
+      document.getElementById("led_button").addEventListener("click", () => {
+        ws.send(JSON.stringify({type: "toggle"}));
+      });     
+      document.getElementById("message_button").addEventListener("click", () => {
+        var input = document.getElementById("message_input");
+        ws.send(JSON.stringify({type: "message", message: input.value}));
+        input.value = "";
+      });
+    }    // event emmited when receiving message 
+    ws.onmessage = function (message) {
+        try {
+            var json = JSON.parse(message.data);
+            lightData.addRow([Date.now(), parseInt(json.light.substr(6), 10), parseInt(json.potentiometer.substr(6), 10)]);
+            if (json.led) {
+              ledEl.classList.add('on');
+            } else {
+              ledEl.classList.remove('on');
+            }
+        } catch (e) {
+            console.log('This doesn\'t look like a valid JSON: ', message.data);
+            return;
+        }
+    }
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+      window.ledEl = document.getElementById('led_div');
+      window.lightData = new google.visualization.DataTable();
+      lightData.addColumn('number', 'X');
+      lightData.addColumn('number', 'Light sensor');
+      lightData.addColumn('number', 'Potentiometer');
+
+      // data.addRows([]);
+
+      var options = {
+        hAxis: {
+          title: 'Time'
+        },
+        vAxis: {
+          title: 'Value'
+        }
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('light_chart_div'));
+      chart.draw(lightData, options);
+      setInterval(() => {
+        chart.draw(lightData, options);
+      }, 2000);
+    }
+    </script>
+    <title>IOT Project</title>
+  </head>
+  <body>
+    <h1>Chart</h1>
+    <div id="light_chart_div"></div>
+    <h1>Led</h1>
+    <div id="led_div">
+    </div>
+    <button id="led_button" type="button">Toggle light!</button>
+    <h1>Message</h1>
+    <input id="message_input" type="text" />
+    <button id="message_button" type="button">Send</button>
+  </body>
+</html>
