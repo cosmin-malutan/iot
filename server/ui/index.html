@@ -6,15 +6,21 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
     var ws = new WebSocket('ws://localhost:8090');    // event emmited when connected
+    function sendMessage(ws) {
+      var input = document.getElementById("message_input");
+        ws.send(JSON.stringify({type: "message", message: input.value}));
+        input.value = "";
+    }
     ws.onopen = function () {
       console.log('websocket is connected ...')        // sending a send event to websocket server
       document.getElementById("led_button").addEventListener("click", () => {
         ws.send(JSON.stringify({type: "toggle"}));
       });     
-      document.getElementById("message_button").addEventListener("click", () => {
-        var input = document.getElementById("message_input");
-        ws.send(JSON.stringify({type: "message", message: input.value}));
-        input.value = "";
+      document.getElementById("message_button").addEventListener("click", sendMessage.bind(ws));
+      document.getElementById("message_input").addEventListener("keyup", event => {
+        if (event.keyCode == 13) {
+          sendMessage(ws);
+        }
       });
     }    // event emmited when receiving message 
     ws.onmessage = function (message) {
